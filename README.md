@@ -7,8 +7,9 @@ How do you get a computer to recognize that two questions like the following:
     
 Are actually the same question? Fortunately, I have a solution!
 
-This is a simple prototype to find the duplicate questions in a reddit AMA. It's goal is to make question-answering easier for interviewees by
- * saving time from having to answer questions over and over again,
+This is a simple prototype to find the duplicate questions in a reddit AMA. It's goal is to make AMAs run a little smoother by
+
+ * saving interviewees time and frustration from having to answer the same questions over and over again,
  * as well as for the Reddit AMA audience who can have more of their questions answered.
  
 #### How it works 
