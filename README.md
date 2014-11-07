@@ -74,3 +74,5 @@ A couple of my favorites
 	 [u"Who's your favorite superhero?", u'Favorite superhero?']
 
 
+
+[.](http://mjk.freeshell.org/port/reddit-faqizer.gif)
