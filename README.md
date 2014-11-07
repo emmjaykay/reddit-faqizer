@@ -45,7 +45,13 @@ A TFIDF score is given to each word or n gram in a linear algebra matrix represe
 
 TFIDF has two parts, *term frequency* and *inverse document frequency*. The basic strategy is to give points for how often a term appears in a sentence and take away points if it appears often through out all the sentences you have. I quote [tfidf.com](http://www.tfidf.com/)
 
-      Consider a document containing 100 words wherein the word cat appears 3 times. The term frequency (i.e., tf) for cat is then (3 / 100) = 0.03. Now, assume we have 10 million documents and the word cat appears in one thousand of these. Then, the inverse document frequency (i.e., idf) is calculated as log(10,000,000 / 1,000) = 4. Thus, the Tf-idf weight is the product of these quantities: 0.03 * 4 = 0.12.
+      Consider a document containing 100 words wherein the word cat
+	  appears 3 times. The term frequency (i.e., tf) for cat is
+	  then (3 / 100) = 0.03. Now, assume we have 10 million documents
+	  and the word cat appears in one thousand of these. Then, the
+	  inverse document frequency (i.e., idf) is calculated
+	  as log(10,000,000 / 1,000) = 4. Thus, the Tf-idf weight is
+	  the product of these quantities: 0.03 * 4 = 0.12.
 
 ###Deducing duplicates      
 We use a machine learning technique called [cluster analysis](http://en.wikipedia.org/wiki/Cluster_analysis). Specifically, we use a clustering algorithm called DBSCAN. The nice thing about this is that we don't have to know ahead of time how many clusters of duplicate questions that exist in our corups.
