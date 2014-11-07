@@ -8,24 +8,14 @@ import requests
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
-from nltk.stem.snowball import SnowballStemmer
-from nltk.stem.wordnet import WordNetLemmatizer
 
 import numpy as np
 import nltk
-from collections import Counter
-from pymongo import MongoClient
-from pymongo import errors
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-from nltk.stem.porter import PorterStemmer
-from nltk.stem.snowball import SnowballStemmer
-from nltk.stem.wordnet import WordNetLemmatizer
 
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -36,14 +26,9 @@ from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 
 import pprint
-
-porter = PorterStemmer()
-#snowball = SnowballStemmer('english')
-wordnet = WordNetLemmatizer()
+import argparse
 
 corpus = []
-BigBagOfWords = []
-import argparse
 
 def fetchFromFile(f):
 
@@ -124,8 +109,6 @@ if __name__ == "__main__":
     tfidf = TfidfVectorizer(ngram_range=(2,5), stop_words=stop, ).fit_transform(corpus)
 
     X = StandardScaler().fit_transform(tfidf.todense())
-
-    km = KMeans(n_clusters=40, init='random', n_init=1, verbose=1)
 
     km = DBSCAN(eps=.1, min_samples=1)
 
