@@ -70,8 +70,12 @@ Some questions appear twice in the output because they were actually posted twic
 
 A couple of my favorites
 
-     [u'Waffles or pancakes? ', u'waffles or pancakes?']
-	 [u"Who's your favorite superhero?", u'Favorite superhero?']
+     [u"Who's your favorite superhero?", u'Favorite superhero?']
+     
+and
+
+     'What is your favorite scene in Parks and Rec?'
+     'What has been your favorite scene to do for Parks and Rec? Why?'
 
 
 
