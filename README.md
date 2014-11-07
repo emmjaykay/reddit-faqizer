@@ -53,8 +53,23 @@ TFIDF has two parts, *term frequency* and *inverse document frequency*. The basi
 	  as log(10,000,000 / 1,000) = 4. Thus, the Tf-idf weight is
 	  the product of these quantities: 0.03 * 4 = 0.12.
 
+Here, 'document' means 'questions' for our application.
+
 ###Deducing duplicates      
 We use a machine learning technique called [cluster analysis](http://en.wikipedia.org/wiki/Cluster_analysis). Specifically, we use a clustering algorithm called DBSCAN. The nice thing about this is that we don't have to know ahead of time how many clusters of duplicate questions that exist in our corups.
 
+###Results
+
 The end result can be seen in [here](sample.output).
- 
+
+Note that a lot of 'junk' questions seemed to have been grouped together by themselves into a sort of 'junk cluster'. Probably
+because those questions are fairly short themselves.
+
+Some questions appear twice in the output because they were actually posted twice.
+
+A couple of my favorites
+
+     [u'Waffles or pancakes? ', u'waffles or pancakes?']
+	 [u"Who's your favorite superhero?", u'Favorite superhero?']
+
+
