@@ -14,7 +14,7 @@ This is a simple prototype to find the duplicate questions in a reddit AMA. It's
  
 #### How it works 
 
-First questions are parsed from the Reddit API or a pickle file, then questions are broken down into their individual words, followed by the removal of *stopwords* (words that are so common that they are not helpful, such as 'the'), then to be translated into a mathematical representation using something called *Term Frequency, Inverse Document Frequency*, and then finally, taking that representation and finding which questions had the most likely chance of being duplicates.
+First questions are parsed from the Reddit API or a pickle file (should contain a list of strings, each string being a question), then questions are broken down into their individual words, followed by the removal of *stopwords* (words that are so common that they are not helpful, such as 'the'), then to be translated into a mathematical representation using something called *Term Frequency, Inverse Document Frequency*, and then finally, taking that representation and finding which questions had the most likely chance of being duplicates.
 
 ## Getting The Data
 
