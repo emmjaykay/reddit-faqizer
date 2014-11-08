@@ -22,10 +22,10 @@ I use praw to collect data from the reddit API. From there, I pick out comments 
 
 ## TFIDF and n-grams
 
-An n-gram of a sentence is like a moving window over a word.
+An n-gram of a sentence is like a moving window over a word. The n-gram process will take a simple sentence like this:
 
      This is a sentence
-could become
+and generate a permutation, or set of tokens comprised of a few words. This is how NLP techniques can feel like two similarly but still distinctly different sentences could actually be the same. Our example could become
 
      this is
      this is a
