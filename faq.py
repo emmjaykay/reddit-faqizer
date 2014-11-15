@@ -37,6 +37,7 @@ def fetchFromFile(f):
     pass
 
 def fetchFromUrl(url):
+    r  = praw.Reddit(user_agent='example')
     amy = None
     try:
         amy = r.get_submission(url)
@@ -84,14 +85,21 @@ if __name__ == "__main__":
     print args
 
     comments = []
-    r  = praw.Reddit(user_agent='example')
+    sys.stdout.write("Preparing to collect stopwords...")
+    sys.stdout.flush()
     stop = set(stopwords.words('english'))
+    sys.stdout.write("done!\n")
 
+    sys.stdout.write("Preparing to collect data from source...")
+    sys.stdout.flush()
     if args.f is not None:
         comments = fetchFromFile(args.f)
     elif args.url is not None:
         comments = fetchFromUrl(args.url)
+    sys.stdout.write("done!\n")
 
+    sys.stdout.write("Preparing to collect comments...")
+    sys.stdout.flush()
     for c in comments:
         a = ' '.join(c.splitlines())
         tok = word_tokenize(a)
@@ -103,16 +111,28 @@ if __name__ == "__main__":
                 tok_stopped.append(word)
 
         corpus.append(a)
+    sys.stdout.write("done!\n")
 
 
+    sys.stdout.write("Preparing to create TFIDF vector...")
+    sys.stdout.flush()
+    tfidf = TfidfVectorizer(ngram_range=(2,4), stop_words=stop, ).fit_transform(corpus)
+    sys.stdout.write("done!\n")
 
-    tfidf = TfidfVectorizer(ngram_range=(2,5), stop_words=stop, ).fit_transform(corpus)
-
+    sys.stdout.write("Preparing to scale date...")
+    sys.stdout.flush()
     X = StandardScaler().fit_transform(tfidf.todense())
+    sys.stdout.write("done!\n")
 
+    sys.stdout.write("Preparing to create DBSCAN...")
+    sys.stdout.flush()
     km = DBSCAN(eps=.1, min_samples=1)
+    sys.stdout.write("done!\n")
 
+    sys.stdout.write("Running fit()...")
+    sys.stdout.flush()
     km.fit(X)
+    sys.stdout.write("done!\n")
 
     res = {}
     for i in range(len(corpus)):
