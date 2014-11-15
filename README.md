@@ -14,7 +14,7 @@ This is a simple prototype to find the duplicate questions in a reddit AMA. It's
  
 #### How it works 
 
-First questions are parsed from the Reddit API or a pickle file, then questions are broken down into their individual words, followed by the removal of *stopwords* (words that are so common that they are not helpful, such as 'the'), then to be translated into a mathematical representation using something called *Term Frequency, Inverse Document Frequency*, and then finally, taking that representation and finding which questions had the most likely chance of being duplicates.
+First questions are parsed from the Reddit API or a pickle file (should contain a list of strings, each string being a question), then questions are broken down into their individual words, followed by the removal of *stopwords* (words that are so common that they are not helpful, such as 'the'), then to be translated into a mathematical representation using something called *Term Frequency, Inverse Document Frequency*, and then finally, taking that representation and finding which questions had the most likely chance of being duplicates.
 
 ## Getting The Data
 
@@ -22,10 +22,10 @@ I use praw to collect data from the reddit API. From there, I pick out comments 
 
 ## TFIDF and n-grams
 
-An n-gram of a sentence is like a moving window over a word.
+An n-gram of a sentence is like a moving window over a word. The n-gram process will take a simple sentence like this:
 
      This is a sentence
-could become
+and generate a permutation, or set of tokens comprised of a few words. This is how NLP techniques can feel like two similarly but still distinctly different sentences could actually be the same. Our example could become
 
      this is
      this is a
