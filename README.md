@@ -61,7 +61,8 @@ We use a machine learning technique called [cluster analysis](http://en.wikipedi
 
 ###Results
 
-The end result can be seen in [here](sample.output).
+The end result for Amy Poehler can be seen in [here](sample.output).
+The end result for John Stewart can be seen in [here](sample-john.output). The Stewart AMA analysis ran into some memory problems so I took the n-gramness down a bit. 
 
 Note that a lot of 'junk' questions seemed to have been grouped together by themselves into a sort of 'junk cluster'. Probably
 because those questions are fairly short themselves.
