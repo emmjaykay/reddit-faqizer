@@ -75,14 +75,17 @@ def fetchFromUrl(url):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Download and find duplicate questions for .')
 
+    parser.add_argument('-n', metavar='m_ngram', type=str, nargs='?', help="Maximum n-gran number")
     parser.add_argument('-u', metavar='url', type=str, nargs='?', help="URL to fetch comments from")
     parser.add_argument('-f', metavar='f', type=str, nargs='?', help="Pickle File to fetch list of comments from")
 
     args = parser.parse_args()
 
     print args
+
+    m_ngram = 4
 
     comments = []
     sys.stdout.write("Preparing to collect stopwords...")
@@ -92,10 +95,17 @@ if __name__ == "__main__":
 
     sys.stdout.write("Preparing to collect data from source...")
     sys.stdout.flush()
-    if args.f is not None:
+    if args.f is not None and args.u is not None:
+        comments = fetchFromUrl(args.u)
+        pickle.dump( comments, open(args.f, "wb"))
+    elif args.f is not None:
         comments = fetchFromFile(args.f)
-    elif args.url is not None:
-        comments = fetchFromUrl(args.url)
+    elif args.u is not None:
+        comments = fetchFromUrl(args.u)
+    
+    if args.n is not None:
+        m_ngram =  int(args.n)
+
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Preparing to collect comments...")
@@ -116,7 +126,7 @@ if __name__ == "__main__":
 
     sys.stdout.write("Preparing to create TFIDF vector...")
     sys.stdout.flush()
-    tfidf = TfidfVectorizer(ngram_range=(2,4), stop_words=stop, ).fit_transform(corpus)
+    tfidf = TfidfVectorizer(ngram_range=(2,m_ngram), stop_words=stop, ).fit_transform(corpus)
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Preparing to scale date...")
