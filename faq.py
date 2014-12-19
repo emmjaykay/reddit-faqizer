@@ -74,6 +74,57 @@ def fetchFromUrl(url):
     return comments
     pass
 
+def dbscan_(X):
+    sys.stdout.write("Preparing to create DBSCAN...")
+    sys.stdout.flush()
+    km = DBSCAN(eps=.1, min_samples=1)
+    sys.stdout.write("done!\n")
+
+    sys.stdout.write("Running fit()...")
+    sys.stdout.flush()
+    km.fit(X)
+    sys.stdout.write("done!\n")
+
+    res = {}
+    for i in range(len(corpus)):
+        label = km.labels_[i] 
+        if res.has_key(label):
+            if corpus[i] not in res[label]:
+                res[label].append(corpus[i])
+        else:
+            res[label] = []
+            res[label].append(corpus[i])
+
+    for i in res.keys():
+        if len(res[i]) > 1:
+            pprint.pprint(res[i])
+
+def nmf_(X):
+    
+    sys.stdout.write("Preparing to run NMF ... ")
+    sys.stdout.flush()
+    X[X < 0] = 0.0
+    km = decomposition.NMF(n_components=10, random_state=1)
+    sys.stdout.write("done!\n")
+
+    sys.stdout.write("Running fit()...")
+    sys.stdout.flush()
+    km.fit(X)
+    sys.stdout.write("done!\n")
+
+    feature_names = vectorizer.get_feature_names()
+
+    for topic_idx, topic in enumerate(km.components_):
+        print("Topic #%d:" % topic_idx)
+        print(" ".join([feature_names[i]
+                for i in topic.argsort()[:-n_top_words - 1:-1]]))
+        print()
+
+n_samples = 2000
+n_features = 1000
+n_topics = 10
+n_top_words = 20
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process some integers.')
@@ -118,12 +169,14 @@ if __name__ == "__main__":
 
     sys.stdout.write("Preparing to create TFIDF vector...")
     sys.stdout.flush()
-    tfidf = TfidfVectorizer(ngram_range=(2,4), 
+    vectorizer = TfidfVectorizer(ngram_range=(2,4), 
                             stop_words='english', 
                             max_df=0.95, 
                             min_df=2,
                             max_features=1000,
-                            ).fit_transform(corpus)
+                            )
+    tfidf = vectorizer.fit_transform(corpus)
+    tfidf = tfidf * tfidf.T
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Preparing to scale date...")
@@ -132,34 +185,7 @@ if __name__ == "__main__":
     sys.stdout.write("done!\n")
 
     if args.F is None:
-        sys.stdout.write("Preparing to create DBSCAN...")
-        sys.stdout.flush()
-        km = DBSCAN(eps=.1, min_samples=1)
-        sys.stdout.write("done!\n")
+        dbscan_(X)
     else:
-        sys.stdout.write("Preparing to run NMF ... ")
-        sys.stdout.flush()
-        X[X < 0] = 0.0
-        km = decomposition.NMF(n_components=10, random_state=1)
-        sys.stdout.write("done!\n")
+        nmf_(X)
 
-    sys.stdout.write("Running fit()...")
-    sys.stdout.flush()
-    km.fit(X)
-    sys.stdout.write("done!\n")
-
-    res = {}
-    for i in range(len(corpus)):
-        label = km.labels_[i] 
-        if res.has_key(label):
-            if corpus[i] not in res[label]:
-                res[label].append(corpus[i])
-        else:
-            res[label] = []
-            res[label].append(corpus[i])
-
-    for i in res.keys():
-        if len(res[i]) > 1:
-            pprint.pprint(res[i])
-
-    
