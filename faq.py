@@ -24,6 +24,7 @@ from sklearn.metrics.pairwise import linear_kernel
 from sklearn.cluster import KMeans 
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
+from sklearn import decomposition
 
 import pprint
 import argparse
@@ -79,6 +80,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-u', metavar='url', type=str, nargs='?', help="URL to fetch comments from")
     parser.add_argument('-f', metavar='f', type=str, nargs='?', help="Pickle File to fetch list of comments from")
+    parser.add_argument('-F', metavar='F', type=str, nargs='*', help="Use NMF")
 
     args = parser.parse_args()
 
@@ -116,7 +118,12 @@ if __name__ == "__main__":
 
     sys.stdout.write("Preparing to create TFIDF vector...")
     sys.stdout.flush()
-    tfidf = TfidfVectorizer(ngram_range=(2,4), stop_words=stop, ).fit_transform(corpus)
+    tfidf = TfidfVectorizer(ngram_range=(2,4), 
+                            stop_words='english', 
+                            max_df=0.95, 
+                            min_df=2,
+                            max_features=1000,
+                            ).fit_transform(corpus)
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Preparing to scale date...")
@@ -124,10 +131,17 @@ if __name__ == "__main__":
     X = StandardScaler().fit_transform(tfidf.todense())
     sys.stdout.write("done!\n")
 
-    sys.stdout.write("Preparing to create DBSCAN...")
-    sys.stdout.flush()
-    km = DBSCAN(eps=.1, min_samples=1)
-    sys.stdout.write("done!\n")
+    if args.F is None:
+        sys.stdout.write("Preparing to create DBSCAN...")
+        sys.stdout.flush()
+        km = DBSCAN(eps=.1, min_samples=1)
+        sys.stdout.write("done!\n")
+    else:
+        sys.stdout.write("Preparing to run NMF ... ")
+        sys.stdout.flush()
+        X[X < 0] = 0.0
+        km = decomposition.NMF(n_components=10, random_state=1)
+        sys.stdout.write("done!\n")
 
     sys.stdout.write("Running fit()...")
     sys.stdout.flush()
