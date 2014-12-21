@@ -30,6 +30,14 @@ import argparse
 
 corpus = []
 
+def fetchFromFileAndSave(f, url):
+    comments = fetchFromUrl(url)
+    saveToFile(f, comments)
+    return comments
+
+def saveToFile(f,comments):
+    pickle.dump( comments, open(f, "wb"))
+
 def fetchFromFile(f):
 
     comments = pickle.load(open(f, 'r'))
@@ -96,8 +104,7 @@ if __name__ == "__main__":
     sys.stdout.write("Preparing to collect data from source...")
     sys.stdout.flush()
     if args.f is not None and args.u is not None:
-        comments = fetchFromUrl(args.u)
-        pickle.dump( comments, open(args.f, "wb"))
+        comments = fetchFromFileAndSave(args.f, args.u)
     elif args.f is not None:
         comments = fetchFromFile(args.f)
     elif args.u is not None:
@@ -136,7 +143,7 @@ if __name__ == "__main__":
 
     sys.stdout.write("Preparing to create DBSCAN...")
     sys.stdout.flush()
-    km = DBSCAN(eps=.1, min_samples=1)
+    km = DBSCAN(eps=1, min_samples=1)
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Running fit()...")
