@@ -26,6 +26,8 @@ from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from sklearn import decomposition
 
+from gensim import corpora, models, similarities
+
 import pprint
 import argparse
 
@@ -85,7 +87,7 @@ def fetchFromUrl(url):
 def dbscan_(X):
     sys.stdout.write("Preparing to create DBSCAN...")
     sys.stdout.flush()
-    km = DBSCAN(eps=.1, min_samples=1)
+    km = DBSCAN(eps=.05, min_samples=1)
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Running fit()...")
@@ -106,6 +108,14 @@ def dbscan_(X):
     for i in res.keys():
         if len(res[i]) > 1:
             pprint.pprint(res[i])
+
+def gensim_(documents):
+    stoplist = set('for a of the and to in'.split())
+    texts = [[word for word in document.lower().split() if word not in stoplist]
+             for document in documents]
+
+    dictionary = corpora.Dictionary(texts)
+    print(dictionary.token2id)
 
 def nmf_(X):
     
@@ -128,6 +138,9 @@ def nmf_(X):
                 for i in topic.argsort()[:-n_top_words - 1:-1]]))
         print()
 
+def nn_(X):
+    pass
+
 n_samples = 2000
 n_features = 1000
 n_topics = 10
@@ -141,6 +154,7 @@ if __name__ == "__main__":
     parser.add_argument('-u', metavar='url', type=str, nargs='?', help="URL to fetch comments from")
     parser.add_argument('-f', metavar='f', type=str, nargs='?', help="Pickle File to fetch list of comments from")
     parser.add_argument('-F', metavar='F', type=str, nargs='*', help="Use NMF")
+    parser.add_argument('-g', action='store_true', help="Use gensim")
 
     args = parser.parse_args()
 
@@ -151,7 +165,12 @@ if __name__ == "__main__":
     comments = []
     sys.stdout.write("Preparing to collect stopwords...")
     sys.stdout.flush()
-    stop = set(stopwords.words('english'))
+    stop = stopwords.words('english')
+    stop.append("Hi amy") 
+    stop.append("when is")
+    stop.append("how does")
+    stop.append("&amp;")
+
     sys.stdout.write("done!\n")
 
     sys.stdout.write("Preparing to collect data from source...")
@@ -187,7 +206,7 @@ if __name__ == "__main__":
     sys.stdout.write("Preparing to create TFIDF vector...")
     sys.stdout.flush()
     vectorizer = TfidfVectorizer(ngram_range=(2,m_ngram), 
-                                 stop_words='english',
+                                 stop_words=stop,
                                  max_df=0.95,
                                  min_df=2,
                                  max_features=1000)
@@ -200,7 +219,12 @@ if __name__ == "__main__":
     X = StandardScaler().fit_transform(tfidf.todense())
     sys.stdout.write("done!\n")
 
-    if args.F is None:
+    if args.g is True:
+        gensim_(comments)
+    elif args.F is None:
+        pca = decomposition.PCA()
+        pca.fit(X)
+        X = pca.transform(X)
         dbscan_(X)
     else:
         nmf_(X)
