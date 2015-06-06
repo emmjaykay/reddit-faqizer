@@ -80,4 +80,4 @@ and
 
 
 
-[.](http://mjk.freeshell.org/port/reddit-faqizer.gif)
+[.](http://mjk.freeshell.org/reddit-faqizer.gif)
